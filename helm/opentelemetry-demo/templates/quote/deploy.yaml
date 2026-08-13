@@ -48,6 +48,8 @@ spec:
               value: cumulative
             - name: QUOTE_SERVICE_PORT
               value: "8080"
+            - name: QUOTE_PORT
+              value: "8080"
             - name: OTEL_PHP_AUTOLOAD_ENABLED
               value: "true"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
@@ -68,5 +70,6 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 15
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 5

@@ -70,8 +70,9 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 15
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 5
       initContainers:
         - command:
           - sh

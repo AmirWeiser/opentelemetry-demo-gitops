@@ -186,10 +186,10 @@ kafka:
   resources:
     requests:
       cpu: 200m
-      memory: 600Mi
+      memory: 900Mi
     limits:
       cpu: 500m
-      memory: 600Mi
+      memory: 900Mi
 
 loadGenerator:
   replicaCount: 1
@@ -221,7 +221,7 @@ productCatalog:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/product-catalog
-    tag: cbd7bcd47792b496c7d5f2b93c2befae916d2d90
+    tag: 9c5948bb9e434388e4aeb19ed242f6969ee0d67d
   resources:
     requests:
       cpu: 25m
