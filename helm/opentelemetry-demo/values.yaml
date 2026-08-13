@@ -1,0 +1,284 @@
+# -----------------------------------------------------------------------------
+# Global settings shared across all services
+# -----------------------------------------------------------------------------
+global:
+  # imagePullSecrets:
+  #   - name: ghcr-pull-secret
+  imagePullSecrets: []
+
+# -----------------------------------------------------------------------------
+# Per-service settings.
+# Only what actually varies between deploys lives here: image, replica count,
+# and resources. Everything else (env wiring, ports, probes, security
+# context) is stable and stays hardcoded in the templates.
+#
+# Some services below temporarily point at the public upstream
+# ghcr.io/open-telemetry/demo image (same source project, pre-built) because
+# our own CI hasn't built/pushed them yet. Once the pipeline builds them from
+# demo-src, these switch to ghcr.io/amirweiser/<service> tagged by commit sha,
+# same as the services that are already self-built.
+# -----------------------------------------------------------------------------
+
+accounting:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-accountingservice
+  resources:
+    requests:
+      cpu: 25m
+      memory: 120Mi
+    limits:
+      cpu: 100m
+      memory: 120Mi
+
+ad:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/ad
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 100m
+      memory: 300Mi
+    limits:
+      cpu: 300m
+      memory: 300Mi
+
+cart:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-cartservice
+  resources:
+    requests:
+      cpu: 50m
+      memory: 160Mi
+    limits:
+      cpu: 200m
+      memory: 160Mi
+
+checkout:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/checkout
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 25m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 20Mi
+
+currency:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-currencyservice
+  resources:
+    requests:
+      cpu: 25m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 20Mi
+
+email:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/email
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 25m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+# flagd itself is a third-party feature-flag daemon (not built by our CI),
+# pinned here for visibility/controlled upgrades rather than hardcoded.
+flagd:
+  image:
+    repository: ghcr.io/open-feature/flagd
+    tag: v0.11.1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 75Mi
+    limits:
+      cpu: 100m
+      memory: 75Mi
+
+# flagd-ui is our own build (src/flagd-ui), runs as a second container in the
+# flagd pod.
+flagdUi:
+  image:
+    repository: ghcr.io/amirweiser/flagd-ui
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 25m
+      memory: 75Mi
+    limits:
+      cpu: 100m
+      memory: 75Mi
+
+fraudDetection:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-frauddetectionservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 300Mi
+    limits:
+      cpu: 300m
+      memory: 300Mi
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-frontend
+  resources:
+    requests:
+      cpu: 100m
+      memory: 250Mi
+    limits:
+      cpu: 300m
+      memory: 250Mi
+
+frontendProxy:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/frontend-proxy
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 50m
+      memory: 50Mi
+    limits:
+      cpu: 150m
+      memory: 50Mi
+
+imageProvider:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/image-provider
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 25m
+      memory: 50Mi
+    limits:
+      cpu: 100m
+      memory: 50Mi
+
+# Custom KRaft-mode Kafka image built from src/kafka.
+kafka:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/kafka
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 200m
+      memory: 600Mi
+    limits:
+      cpu: 500m
+      memory: 600Mi
+
+loadGenerator:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/load-generator
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 200m
+      memory: 1500Mi
+    limits:
+      cpu: 500m
+      memory: 1500Mi
+
+payment:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/payment
+    tag: 6c796bc0d3d17a539eff5f853b9bbd1859046e36
+  resources:
+    requests:
+      cpu: 50m
+      memory: 120Mi
+    limits:
+      cpu: 150m
+      memory: 120Mi
+
+productCatalog:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/product-catalog
+    tag: cbd7bcd47792b496c7d5f2b93c2befae916d2d90
+  resources:
+    requests:
+      cpu: 25m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 20Mi
+
+quote:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/amirweiser/quote
+    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+  resources:
+    requests:
+      cpu: 25m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 40Mi
+
+recommendation:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-recommendationservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+    limits:
+      cpu: 300m
+      memory: 500Mi
+
+shipping:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-shippingservice
+  resources:
+    requests:
+      cpu: 25m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 20Mi
+
+# Third-party in-memory store (redis-compatible), not built by our CI.
+valkey:
+  replicaCount: 1
+  image:
+    repository: valkey/valkey
+    tag: 7.2-alpine
+  resources:
+    requests:
+      cpu: 25m
+      memory: 20Mi
+    limits:
+      cpu: 100m
+      memory: 20Mi
