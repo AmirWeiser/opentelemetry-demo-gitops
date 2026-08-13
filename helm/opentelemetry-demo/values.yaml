@@ -246,8 +246,8 @@ quote:
 recommendation:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-recommendationservice
+    repository: ghcr.io/amirweiser/recommendation
+    tag: d085c6f99032a32c49de8c67c2858ea9264495ad
   resources:
     requests:
       cpu: 100m
