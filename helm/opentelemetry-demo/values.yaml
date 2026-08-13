@@ -195,7 +195,7 @@ loadGenerator:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/load-generator
-    tag: e591b853daeeb2dff1ea4856de9167de1dd7db10
+    tag: d085c6f99032a32c49de8c67c2858ea9264495ad
   resources:
     requests:
       cpu: 200m
