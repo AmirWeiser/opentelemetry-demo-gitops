@@ -207,7 +207,7 @@ loadGenerator:
 payment:
   replicaCount: 1
   image:
-    repository: ghcr.io/amirweiser/payment
+    repository: ghcr.io/amirweiser/paymentservice
     tag: 6c796bc0d3d17a539eff5f853b9bbd1859046e36
   resources:
     requests:
