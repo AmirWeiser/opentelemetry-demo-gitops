@@ -48,6 +48,8 @@ spec:
               value: cumulative
             - name: EMAIL_SERVICE_PORT
               value: "8080"
+            - name: EMAIL_PORT
+              value: "8080"
             - name: APP_ENV
               value: production
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT

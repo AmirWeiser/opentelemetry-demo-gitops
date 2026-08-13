@@ -48,6 +48,8 @@ spec:
               value: cumulative
             - name: AD_SERVICE_PORT
               value: "8080"
+            - name: AD_PORT
+              value: "8080"
             - name: FLAGD_HOST
               value: 'opentelemetry-demo-flagd'
             - name: FLAGD_PORT
