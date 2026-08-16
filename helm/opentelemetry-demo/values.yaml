@@ -66,10 +66,10 @@ checkout:
   resources:
     requests:
       cpu: 25m
-      memory: 20Mi
+      memory: 64Mi
     limits:
       cpu: 100m
-      memory: 20Mi
+      memory: 96Mi
 
 currency:
   replicaCount: 1
@@ -79,10 +79,10 @@ currency:
   resources:
     requests:
       cpu: 25m
-      memory: 20Mi
+      memory: 64Mi
     limits:
       cpu: 100m
-      memory: 20Mi
+      memory: 96Mi
 
 email:
   replicaCount: 1
@@ -225,10 +225,10 @@ productCatalog:
   resources:
     requests:
       cpu: 25m
-      memory: 20Mi
+      memory: 100Mi
     limits:
       cpu: 100m
-      memory: 20Mi
+      memory: 128Mi
 
 quote:
   replicaCount: 1
@@ -264,10 +264,10 @@ shipping:
   resources:
     requests:
       cpu: 25m
-      memory: 20Mi
+      memory: 64Mi
     limits:
       cpu: 100m
-      memory: 20Mi
+      memory: 96Mi
 
 # Third-party in-memory store (redis-compatible), not built by our CI.
 valkey:
