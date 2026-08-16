@@ -5,7 +5,6 @@ global:
   # imagePullSecrets:
   #   - name: ghcr-pull-secret
   imagePullSecrets: []
-
 # -----------------------------------------------------------------------------
 # Per-service settings.
 # Only what actually varies between deploys lives here: image, replica count,
@@ -18,12 +17,11 @@ global:
 # demo-src, these switch to ghcr.io/amirweiser/<service> tagged by commit sha,
 # same as the services that are already self-built.
 # -----------------------------------------------------------------------------
-
 accounting:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-accountingservice
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -31,12 +29,11 @@ accounting:
     limits:
       cpu: 100m
       memory: 120Mi
-
 ad:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/ad
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 100m
@@ -44,12 +41,11 @@ ad:
     limits:
       cpu: 300m
       memory: 300Mi
-
 cart:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-cartservice
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 50m
@@ -57,12 +53,11 @@ cart:
     limits:
       cpu: 200m
       memory: 160Mi
-
 checkout:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/checkout
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -70,12 +65,11 @@ checkout:
     limits:
       cpu: 100m
       memory: 96Mi
-
 currency:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-currencyservice
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -83,12 +77,11 @@ currency:
     limits:
       cpu: 100m
       memory: 96Mi
-
 email:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/email
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -96,7 +89,6 @@ email:
     limits:
       cpu: 100m
       memory: 100Mi
-
 # flagd itself is a third-party feature-flag daemon (not built by our CI),
 # pinned here for visibility/controlled upgrades rather than hardcoded.
 flagd:
@@ -110,13 +102,12 @@ flagd:
     limits:
       cpu: 100m
       memory: 75Mi
-
 # flagd-ui is our own build (src/flagd-ui), runs as a second container in the
 # flagd pod.
 flagdUi:
   image:
     repository: ghcr.io/amirweiser/flagd-ui
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -124,12 +115,11 @@ flagdUi:
     limits:
       cpu: 100m
       memory: 75Mi
-
 fraudDetection:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-frauddetectionservice
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 100m
@@ -137,12 +127,11 @@ fraudDetection:
     limits:
       cpu: 300m
       memory: 300Mi
-
 frontend:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-frontend
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 100m
@@ -150,12 +139,11 @@ frontend:
     limits:
       cpu: 300m
       memory: 250Mi
-
 frontendProxy:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/frontend-proxy
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 50m
@@ -169,12 +157,11 @@ frontendProxy:
     # it can never get an address and ArgoCD would report it stuck
     # Progressing forever.
     enabled: false
-
 imageProvider:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/image-provider
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -182,13 +169,12 @@ imageProvider:
     limits:
       cpu: 100m
       memory: 50Mi
-
 # Custom KRaft-mode Kafka image built from src/kafka.
 kafka:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/kafka
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 200m
@@ -196,12 +182,11 @@ kafka:
     limits:
       cpu: 500m
       memory: 900Mi
-
 loadGenerator:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/load-generator
-    tag: d085c6f99032a32c49de8c67c2858ea9264495ad
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 50m
@@ -209,12 +194,11 @@ loadGenerator:
     limits:
       cpu: 200m
       memory: 300Mi
-
 payment:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/paymentservice
-    tag: 6c796bc0d3d17a539eff5f853b9bbd1859046e36
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 50m
@@ -222,12 +206,11 @@ payment:
     limits:
       cpu: 150m
       memory: 120Mi
-
 productCatalog:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/product-catalog
-    tag: 9c5948bb9e434388e4aeb19ed242f6969ee0d67d
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -235,12 +218,11 @@ productCatalog:
     limits:
       cpu: 100m
       memory: 128Mi
-
 quote:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/quote
-    tag: 4f7916b5a592cfa4a338e47d7a46c22366ad9d6a
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -248,12 +230,11 @@ quote:
     limits:
       cpu: 100m
       memory: 40Mi
-
 recommendation:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/recommendation
-    tag: d085c6f99032a32c49de8c67c2858ea9264495ad
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 100m
@@ -261,12 +242,11 @@ recommendation:
     limits:
       cpu: 300m
       memory: 700Mi
-
 shipping:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-shippingservice
+    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
       cpu: 25m
@@ -274,7 +254,6 @@ shipping:
     limits:
       cpu: 100m
       memory: 96Mi
-
 # Third-party in-memory store (redis-compatible), not built by our CI.
 valkey:
   replicaCount: 1
