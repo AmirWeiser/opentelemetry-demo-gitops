@@ -163,6 +163,12 @@ frontendProxy:
     limits:
       cpu: 150m
       memory: 50Mi
+  ingress:
+    # ALB ingress class - only resolves on EKS with the AWS Load Balancer
+    # Controller installed. Leave disabled for local/minikube testing, where
+    # it can never get an address and ArgoCD would report it stuck
+    # Progressing forever.
+    enabled: false
 
 imageProvider:
   replicaCount: 1
