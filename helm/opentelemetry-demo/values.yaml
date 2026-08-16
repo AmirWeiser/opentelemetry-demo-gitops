@@ -68,7 +68,7 @@ checkout:
 currency:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
+    repository: ghcr.io/amirweiser/currency
     tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
@@ -118,7 +118,7 @@ flagdUi:
 fraudDetection:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
+    repository: ghcr.io/amirweiser/fraud-detection
     tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
   resources:
     requests:
