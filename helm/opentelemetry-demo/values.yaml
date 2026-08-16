@@ -251,10 +251,10 @@ recommendation:
   resources:
     requests:
       cpu: 100m
-      memory: 500Mi
+      memory: 700Mi
     limits:
       cpu: 300m
-      memory: 500Mi
+      memory: 700Mi
 
 shipping:
   replicaCount: 1

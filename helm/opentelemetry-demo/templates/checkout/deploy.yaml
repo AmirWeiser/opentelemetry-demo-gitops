@@ -86,6 +86,11 @@ spec:
               value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo,service.version=1.12.0
           resources:
             {{- toYaml .Values.checkout.resources | nindent 12 }}
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 30
           readinessProbe:
             tcpSocket:
               port: 8080
@@ -94,7 +99,6 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 30
             periodSeconds: 20
             failureThreshold: 5
       initContainers:
