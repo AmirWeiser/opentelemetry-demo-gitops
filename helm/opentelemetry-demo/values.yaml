@@ -21,7 +21,7 @@ accounting:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: 1.12.0-accountingservice
   resources:
     requests:
       cpu: 25m
@@ -45,7 +45,7 @@ cart:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: 1.12.0-cartservice
   resources:
     requests:
       cpu: 50m
@@ -131,7 +131,7 @@ frontend:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: 1.12.0-frontend
   resources:
     requests:
       cpu: 100m
@@ -246,7 +246,7 @@ shipping:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: 1.12.0-shippingservice
   resources:
     requests:
       cpu: 25m
