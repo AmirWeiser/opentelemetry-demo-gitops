@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-demo-jaeger
+  labels:
+    opentelemetry.io/name: opentelemetry-demo-jaeger
+    app.kubernetes.io/instance: opentelemetry-demo
+    app.kubernetes.io/component: jaeger
+    app.kubernetes.io/name: opentelemetry-demo-jaeger
+    app.kubernetes.io/part-of: opentelemetry-demo
+spec:
+  replicas: {{ .Values.jaeger.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      opentelemetry.io/name: opentelemetry-demo-jaeger
+  template:
+    metadata:
+      labels:
+        opentelemetry.io/name: opentelemetry-demo-jaeger
+        app.kubernetes.io/instance: opentelemetry-demo
+        app.kubernetes.io/component: jaeger
+        app.kubernetes.io/name: opentelemetry-demo-jaeger
+    spec:
+      serviceAccountName: opentelemetry-demo
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: jaeger
+          image: "{{ .Values.jaeger.image.repository }}:{{ .Values.jaeger.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+            - name: SPAN_STORAGE_TYPE
+              value: memory
+          ports:
+            - containerPort: 16686
+              name: ui
+            - containerPort: 4317
+              name: otlp-grpc
+            - containerPort: 4318
+              name: otlp-http
+          resources:
+            {{- toYaml .Values.jaeger.resources | nindent 12 }}
+          startupProbe:
+            tcpSocket:
+              port: 16686
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: 16686
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 16686
+            periodSeconds: 20

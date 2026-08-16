@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-demo-prometheus
+  labels:
+    opentelemetry.io/name: opentelemetry-demo-prometheus
+    app.kubernetes.io/instance: opentelemetry-demo
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/name: opentelemetry-demo-prometheus
+    app.kubernetes.io/part-of: opentelemetry-demo
+spec:
+  replicas: {{ .Values.prometheus.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      opentelemetry.io/name: opentelemetry-demo-prometheus
+  template:
+    metadata:
+      labels:
+        opentelemetry.io/name: opentelemetry-demo-prometheus
+        app.kubernetes.io/instance: opentelemetry-demo
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/name: opentelemetry-demo-prometheus
+    spec:
+      serviceAccountName: opentelemetry-demo
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: prometheus
+          image: "{{ .Values.prometheus.image.repository }}:{{ .Values.prometheus.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.retention.time=6h
+          ports:
+            - containerPort: 9090
+              name: ui
+          resources:
+            {{- toYaml .Values.prometheus.resources | nindent 12 }}
+          startupProbe:
+            tcpSocket:
+              port: 9090
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: 9090
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9090
+            periodSeconds: 20
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: opentelemetry-demo-prometheus-config

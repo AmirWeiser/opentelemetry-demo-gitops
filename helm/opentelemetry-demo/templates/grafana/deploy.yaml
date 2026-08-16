@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-demo-grafana
+  labels:
+    opentelemetry.io/name: opentelemetry-demo-grafana
+    app.kubernetes.io/instance: opentelemetry-demo
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: opentelemetry-demo-grafana
+    app.kubernetes.io/part-of: opentelemetry-demo
+spec:
+  replicas: {{ .Values.grafana.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      opentelemetry.io/name: opentelemetry-demo-grafana
+  template:
+    metadata:
+      labels:
+        opentelemetry.io/name: opentelemetry-demo-grafana
+        app.kubernetes.io/instance: opentelemetry-demo
+        app.kubernetes.io/component: grafana
+        app.kubernetes.io/name: opentelemetry-demo-grafana
+    spec:
+      serviceAccountName: opentelemetry-demo
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: grafana
+          image: "{{ .Values.grafana.image.repository }}:{{ .Values.grafana.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: {{ .Values.grafana.adminPassword | quote }}
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "true"
+            - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+              value: Viewer
+          ports:
+            - containerPort: 3000
+              name: ui
+          resources:
+            {{- toYaml .Values.grafana.resources | nindent 12 }}
+          startupProbe:
+            tcpSocket:
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            periodSeconds: 20
+          volumeMounts:
+            - name: datasources
+              mountPath: /etc/grafana/provisioning/datasources
+      volumes:
+        - name: datasources
+          configMap:
+            name: opentelemetry-demo-grafana-datasources

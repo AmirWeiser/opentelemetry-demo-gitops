@@ -118,8 +118,8 @@ flagdUi:
 fraudDetection:
   replicaCount: 1
   image:
-    repository: ghcr.io/amirweiser/fraud-detection
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    repository: ghcr.io/open-telemetry/demo
+    tag: 1.12.0-frauddetectionservice
   resources:
     requests:
       cpu: 100m
@@ -198,7 +198,7 @@ payment:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/paymentservice
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: 6c796bc0d3d17a539eff5f853b9bbd1859046e36
   resources:
     requests:
       cpu: 50m
@@ -267,3 +267,66 @@ valkey:
     limits:
       cpu: 100m
       memory: 20Mi
+
+# -----------------------------------------------------------------------------
+# Minimum observability stack. Every service above already pushes OTLP
+# traces/metrics/logs to OTEL_EXPORTER_OTLP_ENDPOINT -
+# http://opentelemetry-demo-otelcol:4317 - this just deploys the collector
+# that's been missing (that's why every pod's logs are full of export
+# failures) and a minimal backend to look at what it collects. All
+# single-replica, minimal footprint given this cluster's resource ceiling.
+# -----------------------------------------------------------------------------
+
+otelCollector:
+  replicaCount: 1
+  image:
+    repository: otel/opentelemetry-collector-contrib
+    tag: latest
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# In-memory storage (no external DB), built-in OTLP receiver.
+jaeger:
+  replicaCount: 1
+  image:
+    repository: jaegertracing/all-in-one
+    tag: latest
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+prometheus:
+  replicaCount: 1
+  image:
+    repository: prom/prometheus
+    tag: latest
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 300Mi
+
+grafana:
+  replicaCount: 1
+  image:
+    repository: grafana/grafana
+    tag: latest
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  adminPassword: admin

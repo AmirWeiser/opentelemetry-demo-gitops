@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-demo-otelcol
+  labels:
+    opentelemetry.io/name: opentelemetry-demo-otelcol
+    app.kubernetes.io/instance: opentelemetry-demo
+    app.kubernetes.io/component: otelcol
+    app.kubernetes.io/name: opentelemetry-demo-otelcol
+    app.kubernetes.io/part-of: opentelemetry-demo
+spec:
+  replicas: {{ .Values.otelCollector.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      opentelemetry.io/name: opentelemetry-demo-otelcol
+  template:
+    metadata:
+      labels:
+        opentelemetry.io/name: opentelemetry-demo-otelcol
+        app.kubernetes.io/instance: opentelemetry-demo
+        app.kubernetes.io/component: otelcol
+        app.kubernetes.io/name: opentelemetry-demo-otelcol
+    spec:
+      serviceAccountName: opentelemetry-demo
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: otelcol
+          image: "{{ .Values.otelCollector.image.repository }}:{{ .Values.otelCollector.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /otelcol-contrib
+            - --config=/etc/otelcol/otelcol-config.yaml
+          ports:
+            - containerPort: 4317
+              name: otlp-grpc
+            - containerPort: 4318
+              name: otlp-http
+            - containerPort: 8889
+              name: prom-metrics
+          resources:
+            {{- toYaml .Values.otelCollector.resources | nindent 12 }}
+          startupProbe:
+            tcpSocket:
+              port: 4317
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: 4317
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 4317
+            periodSeconds: 20
+          volumeMounts:
+            - name: config
+              mountPath: /etc/otelcol
+      volumes:
+        - name: config
+          configMap:
+            name: opentelemetry-demo-otelcol-config
