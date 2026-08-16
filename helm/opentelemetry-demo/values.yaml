@@ -198,11 +198,11 @@ loadGenerator:
     tag: d085c6f99032a32c49de8c67c2858ea9264495ad
   resources:
     requests:
-      cpu: 200m
-      memory: 1500Mi
+      cpu: 50m
+      memory: 200Mi
     limits:
-      cpu: 500m
-      memory: 1500Mi
+      cpu: 200m
+      memory: 300Mi
 
 payment:
   replicaCount: 1
