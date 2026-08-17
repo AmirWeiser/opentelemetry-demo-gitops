@@ -131,7 +131,7 @@ frontend:
   replicaCount: 1
   image:
     repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-frontend
+    tag: 9707260e11b336d5a6bcb75344c824af3f019d91
   resources:
     requests:
       cpu: 100m
@@ -273,7 +273,6 @@ valkey:
     limits:
       cpu: 100m
       memory: 20Mi
-
 # -----------------------------------------------------------------------------
 # Minimum observability stack. Every service above already pushes OTLP
 # traces/metrics/logs to OTEL_EXPORTER_OTLP_ENDPOINT -
@@ -282,7 +281,6 @@ valkey:
 # failures) and a minimal backend to look at what it collects. All
 # single-replica, minimal footprint given this cluster's resource ceiling.
 # -----------------------------------------------------------------------------
-
 otelCollector:
   replicaCount: 1
   image:
@@ -295,7 +293,6 @@ otelCollector:
     limits:
       cpu: 250m
       memory: 256Mi
-
 # In-memory storage (no external DB), built-in OTLP receiver.
 jaeger:
   replicaCount: 1
@@ -309,7 +306,6 @@ jaeger:
     limits:
       cpu: 200m
       memory: 256Mi
-
 prometheus:
   replicaCount: 1
   image:
@@ -322,7 +318,6 @@ prometheus:
     limits:
       cpu: 200m
       memory: 300Mi
-
 grafana:
   replicaCount: 1
   image:
