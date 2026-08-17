@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opentelemetry-demo-grafana-dashboard-provider
+  labels:
+    opentelemetry.io/name: opentelemetry-demo-grafana
+    app.kubernetes.io/instance: opentelemetry-demo
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: opentelemetry-demo-grafana
+    app.kubernetes.io/part-of: opentelemetry-demo
+data:
+  provider.yaml: |
+    apiVersion: 1
+    providers:
+      - name: opentelemetry-demo
+        folder: OpenTelemetry Demo
+        type: file
+        options:
+          path: /var/lib/grafana/dashboards
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opentelemetry-demo-grafana-dashboard-overview
+  labels:
+    opentelemetry.io/name: opentelemetry-demo-grafana
+    app.kubernetes.io/instance: opentelemetry-demo
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: opentelemetry-demo-grafana
+    app.kubernetes.io/part-of: opentelemetry-demo
+data:
+  overview.json: |
+    {
+      "title": "OpenTelemetry Demo - Overview",
+      "uid": "otel-demo-overview",
+      "timezone": "browser",
+      "refresh": "10s",
+      "time": { "from": "now-15m", "to": "now" },
+      "schemaVersion": 39,
+      "panels": [
+        {
+          "id": 1,
+          "title": "Collector reachable",
+          "type": "stat",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "targets": [ { "expr": "up{job=\"otel-collector\"}", "legendFormat": "otelcol" } ],
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                { "type": "value", "options": { "1": { "text": "UP", "color": "green" }, "0": { "text": "DOWN", "color": "red" } } }
+              ],
+              "thresholds": { "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "title": "Frontend requests/sec",
+          "type": "timeseries",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 8, "w": 9, "x": 6, "y": 0 },
+          "targets": [ { "expr": "sum(rate(app_frontend_requests_total[5m]))", "legendFormat": "requests/sec" } ]
+        },
+        {
+          "id": 3,
+          "title": "Payment transactions/sec",
+          "type": "timeseries",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 8, "w": 9, "x": 15, "y": 0 },
+          "targets": [ { "expr": "sum(rate(app_payment_transactions_total[5m]))", "legendFormat": "transactions/sec" } ]
+        },
+        {
+          "id": 4,
+          "title": "HTTP server latency (p95, by service)",
+          "type": "timeseries",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+          "fieldConfig": { "defaults": { "unit": "s" } },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_server_duration_seconds_bucket[5m])))",
+              "legendFormat": "{{job}}"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Feature flag evaluations/sec",
+          "type": "timeseries",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+          "targets": [
+            {
+              "expr": "sum by (flag_key) (rate(feature_flag_flagd_evaluation_reason_total[5m]))",
+              "legendFormat": "{{flag_key}}"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "title": "JVM heap used (Java services)",
+          "type": "timeseries",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+          "fieldConfig": { "defaults": { "unit": "bytes" } },
+          "targets": [
+            { "expr": "jvm_memory_used_bytes{job=\"otel-collector\"}", "legendFormat": "{{job}} {{jvm_memory_type}}" }
+          ]
+        },
+        {
+          "id": 7,
+          "title": "Kafka consumer fetch rate",
+          "type": "timeseries",
+          "datasource": "Prometheus",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+          "targets": [
+            { "expr": "kafka_consumer_fetch_rate", "legendFormat": "{{client_id}}" }
+          ]
+        }
+      ]
+    }
