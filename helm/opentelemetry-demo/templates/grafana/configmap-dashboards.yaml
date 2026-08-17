@@ -80,7 +80,7 @@ data:
           "targets": [
             {
               "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_server_duration_seconds_bucket[5m])))",
-              "legendFormat": "{{job}}"
+              "legendFormat": "{{`{{job}}`}}"
             }
           ]
         },
@@ -93,7 +93,7 @@ data:
           "targets": [
             {
               "expr": "sum by (flag_key) (rate(feature_flag_flagd_evaluation_reason_total[5m]))",
-              "legendFormat": "{{flag_key}}"
+              "legendFormat": "{{`{{flag_key}}`}}"
             }
           ]
         },
@@ -105,7 +105,7 @@ data:
           "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
           "fieldConfig": { "defaults": { "unit": "bytes" } },
           "targets": [
-            { "expr": "jvm_memory_used_bytes{job=\"otel-collector\"}", "legendFormat": "{{job}} {{jvm_memory_type}}" }
+            { "expr": "jvm_memory_used_bytes{job=\"otel-collector\"}", "legendFormat": "{{`{{job}} {{jvm_memory_type}}`}}" }
           ]
         },
         {
@@ -115,7 +115,7 @@ data:
           "datasource": "Prometheus",
           "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
           "targets": [
-            { "expr": "kafka_consumer_fetch_rate", "legendFormat": "{{client_id}}" }
+            { "expr": "kafka_consumer_fetch_rate", "legendFormat": "{{`{{client_id}}`}}" }
           ]
         }
       ]
