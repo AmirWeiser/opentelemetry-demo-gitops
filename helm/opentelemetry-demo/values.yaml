@@ -130,8 +130,8 @@ fraudDetection:
 frontend:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
-    tag: 9707260e11b336d5a6bcb75344c824af3f019d91
+    repository: ghcr.io/amirweiser/frontend
+    tag: 51f805197cb66cf842c6d88d166295a3bcdeeb6d
   resources:
     requests:
       cpu: 100m
