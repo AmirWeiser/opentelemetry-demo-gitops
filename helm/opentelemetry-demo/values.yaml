@@ -321,7 +321,11 @@ grafana:
   replicaCount: 1
   image:
     repository: grafana/grafana
-    tag: latest
+    # Pinned to an older, lighter release on purpose: "latest" pulls a much
+    # heavier build (its own internal apiserver, unified storage, alerting
+    # scheduler) that hammers its SQLite backend hard enough to time out
+    # under this cluster's CPU constraints.
+    tag: 10.4.2
   resources:
     requests:
       cpu: 50m
