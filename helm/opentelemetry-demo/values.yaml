@@ -147,10 +147,16 @@ frontendProxy:
   resources:
     requests:
       cpu: 50m
-      memory: 50Mi
+      memory: 64Mi
+    # limits.cpu was 150m, which pegged the container at 100% of its quota
+    # even at idle (same hard-CFS-throttle failure mode as the Grafana fix
+    # below) and manifested as the UI hanging with "upstream request
+    # timeout" - envoy's proxying + OTel tracing overhead needs more burst
+    # room than that. memory.limit bumped too: usage was already sitting
+    # right at the old 50Mi ceiling.
     limits:
-      cpu: 150m
-      memory: 50Mi
+      cpu: 500m
+      memory: 128Mi
   ingress:
     # ALB ingress class - only resolves on EKS with the AWS Load Balancer
     # Controller installed. Leave disabled for local/minikube testing, where
