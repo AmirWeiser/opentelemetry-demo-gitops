@@ -48,7 +48,15 @@ spec:
               value: cumulative
             - name: SHIPPING_SERVICE_PORT
               value: "8080"
+            # main.rs reads SHIPPING_PORT and quote.rs reads QUOTE_ADDR
+            # directly (not the *_SERVICE_* names above) - same systemic
+            # naming mismatch as accounting/KAFKA_ADDR, only surfaced now
+            # that this service runs our own build for the first time.
+            - name: SHIPPING_PORT
+              value: "8080"
             - name: QUOTE_SERVICE_ADDR
+              value: http://opentelemetry-demo-quoteservice:8080
+            - name: QUOTE_ADDR
               value: http://opentelemetry-demo-quoteservice:8080
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: http://$(OTEL_COLLECTOR_NAME):4317

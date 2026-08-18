@@ -45,6 +45,12 @@ spec:
               value: cumulative
             - name: KAFKA_SERVICE_ADDR
               value: 'opentelemetry-demo-kafka:9092'
+            # Consumer.cs reads KAFKA_ADDR directly (not KAFKA_SERVICE_ADDR) -
+            # same systemic naming mismatch hit elsewhere in this chart, only
+            # surfaced now that this service runs our own build instead of
+            # the public fallback image for the first time.
+            - name: KAFKA_ADDR
+              value: 'opentelemetry-demo-kafka:9092'
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: http://$(OTEL_COLLECTOR_NAME):4318
             - name: OTEL_RESOURCE_ATTRIBUTES
