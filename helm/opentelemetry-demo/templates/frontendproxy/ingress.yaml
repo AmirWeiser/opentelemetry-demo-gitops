@@ -9,8 +9,9 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: example.com
-      http:
+    # No `host:` filter - matches any Host header, so the ALB's own DNS
+    # name works directly in a browser without owning a real domain.
+    - http:
         paths:
           - path: "/"
             pathType: Prefix
