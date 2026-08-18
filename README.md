@@ -61,9 +61,10 @@ Point ArgoCD at this repo by applying the Application manifest:
 kubectl apply -f argocd-application.yaml
 ```
 
-`destination.server: https://kubernetes.default.svc` targets whatever cluster ArgoCD itself is running on — currently minikube. Everything else (namespace creation, sync, pruning, self-healing) is handled by the `syncPolicy.automated` block.
+`destination.server: https://kubernetes.default.svc` targets whatever cluster ArgoCD itself is running on - the same manifest works unchanged whether ArgoCD lives on minikube or on EKS. Everything else (namespace creation, sync, pruning, self-healing) is handled by the `syncPolicy.automated` block.
 
 ### Notes on values.yaml
 
-- `frontendProxy.ingress.enabled` is `false` by default: the ingress uses the AWS ALB ingress class, which only resolves on EKS with the AWS Load Balancer Controller installed. Left enabled on minikube, ArgoCD would report the Application stuck `Progressing` forever waiting for an address that will never come.
+- `frontendProxy.ingress.enabled` is `true` - the app currently targets EKS, where the [AWS Load Balancer Controller](https://github.com/AmirWeiser/opentelemetry-aws-infra) provisions a real internet-facing ALB for it (confirmed working: `kubectl get ingress` returns a live `*.elb.amazonaws.com` address serving HTTP 200). The Ingress rule has no `host:` filter, so that ALB address works directly in a browser without owning a domain. Flip this back to `false` for minikube, where the ALB ingress class has no controller and ArgoCD would report the Application stuck `Progressing` forever waiting for an address that will never come.
+- `global.imagePullSecrets` references a Secret named `ghcr-pull-secret` by name - the credential itself is never committed here (a pull secret's contents are base64, not encryption); it's created directly in the cluster by `opentelemetry-aws-infra`'s bootstrap script from a locally-held PAT.
 - A few services still point at the public upstream `ghcr.io/open-telemetry/demo` image rather than an `amirweiser`-built one — noted inline in `values.yaml`. CI in `demo-src` is fully capable of building them; those specific tags just haven't been promoted yet. Swapping them over is a `values.yaml` edit, not a pipeline change.
