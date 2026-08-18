@@ -2,12 +2,12 @@
 # Global settings shared across all services
 # -----------------------------------------------------------------------------
 global:
-  # References a Secret named "ghcr-pull-secret" that must already exist in
-  # the target namespace - created by the EKS bootstrap script from a local
-  # GHCR PAT, never committed to git (a pull secret's contents are only
+  # Minikube-safe default: no pull secret needed since it pulls public
+  # images/local layers directly. EKS overrides this in values-eks.yaml,
+  # referencing a Secret created by the EKS bootstrap script from a local
+  # GHCR PAT - never committed to git (a pull secret's contents are only
   # base64, not encrypted).
-  imagePullSecrets:
-    - name: ghcr-pull-secret
+  imagePullSecrets: []
 # -----------------------------------------------------------------------------
 # Per-service settings.
 # Only what actually varies between deploys lives here: image, replica count,
@@ -161,11 +161,11 @@ frontendProxy:
       cpu: 500m
       memory: 128Mi
   ingress:
-    # ALB ingress class - only resolves on EKS with the AWS Load Balancer
-    # Controller installed. Enabled now that we're targeting EKS; flip back
-    # to false for minikube, where it can never get an address and ArgoCD
-    # would report it stuck Progressing forever.
-    enabled: true
+    # Minikube-safe default: ALB ingress class has no controller there, and
+    # ArgoCD would report the Application stuck Progressing forever waiting
+    # for an address that never comes. EKS overrides this to true in
+    # values-eks.yaml.
+    enabled: false
 imageProvider:
   replicaCount: 1
   image:
