@@ -45,6 +45,11 @@ spec:
               value: cumulative
             - name: KAFKA_SERVICE_ADDR
               value: 'opentelemetry-demo-kafka:9092'
+            # main.kt reads KAFKA_ADDR directly (not KAFKA_SERVICE_ADDR) -
+            # same systemic naming mismatch as accounting, only surfaced now
+            # that this service runs our own build for the first time.
+            - name: KAFKA_ADDR
+              value: 'opentelemetry-demo-kafka:9092'
             - name: FLAGD_HOST
               value: 'opentelemetry-demo-flagd'
             - name: FLAGD_PORT
