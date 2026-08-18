@@ -231,7 +231,7 @@ quote:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/quote
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: 84a1065dcf494aecb4b3af653055c0493674085e
   resources:
     requests:
       cpu: 25m
