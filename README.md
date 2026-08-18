@@ -27,9 +27,11 @@ CI in `opentelemetry-demo-src` is the only thing that ever writes to this repo �
 ## Repo layout
 
 ```
-argocd-application.yaml                          # the ArgoCD Application resource itself
+argocd-application.yaml                          # ArgoCD Application - minikube (values.yaml only)
+argocd-application-eks.yaml                        # ArgoCD Application - EKS (values.yaml + values-eks.yaml)
 helm/opentelemetry-demo/
 ├── values.yaml                                    # image/tag/replica/resources per service - the only thing CI touches
+├── values-eks.yaml                                 # EKS-only overrides layered on top (ingress, pull secret)
 ├── Chart.yaml
 └── templates/
     ├── <service>/{deploy,svc}.yaml                 # one directory per service, 19 total
@@ -55,16 +57,23 @@ All four run single-replica with deliberately small resource footprints — this
 
 ## Deploying
 
-Point ArgoCD at this repo by applying the Application manifest:
+Two ArgoCD Application manifests, one per target - both deploy the same name (`opentelemetry-demo` in the `argocd` namespace), so only ever apply one to a given cluster:
 
 ```bash
+# minikube - loads values.yaml only
 kubectl apply -f argocd-application.yaml
+
+# EKS - loads values.yaml, then layers values-eks.yaml on top
+kubectl apply -f argocd-application-eks.yaml
 ```
 
-`destination.server: https://kubernetes.default.svc` targets whatever cluster ArgoCD itself is running on - the same manifest works unchanged whether ArgoCD lives on minikube or on EKS. Everything else (namespace creation, sync, pruning, self-healing) is handled by the `syncPolicy.automated` block.
+`destination.server: https://kubernetes.default.svc` targets whatever cluster ArgoCD itself is running on in both cases - the only difference between the two manifests is `spec.source.helm.valueFiles`. Everything else (namespace creation, sync, pruning, self-healing) is handled by the `syncPolicy.automated` block.
 
-### Notes on values.yaml
+### Why two values files instead of one
 
-- `frontendProxy.ingress.enabled` is `true` - the app currently targets EKS, where the [AWS Load Balancer Controller](https://github.com/AmirWeiser/opentelemetry-aws-infra) provisions a real internet-facing ALB for it (confirmed working: `kubectl get ingress` returns a live `*.elb.amazonaws.com` address serving HTTP 200). The Ingress rule has no `host:` filter, so that ALB address works directly in a browser without owning a domain. Flip this back to `false` for minikube, where the ALB ingress class has no controller and ArgoCD would report the Application stuck `Progressing` forever waiting for an address that will never come.
-- `global.imagePullSecrets` references a Secret named `ghcr-pull-secret` by name - the credential itself is never committed here (a pull secret's contents are base64, not encryption); it's created directly in the cluster by `opentelemetry-aws-infra`'s bootstrap script from a locally-held PAT.
-- A few services still point at the public upstream `ghcr.io/open-telemetry/demo` image rather than an `amirweiser`-built one — noted inline in `values.yaml`. CI in `demo-src` is fully capable of building them; those specific tags just haven't been promoted yet. Swapping them over is a `values.yaml` edit, not a pipeline change.
+`values.yaml`'s own defaults are minikube-safe (`frontendProxy.ingress.enabled: false`, `global.imagePullSecrets: []`) - flipping them for EKS used to mean hand-editing `values.yaml` and reverting it every time the target environment changed. `values-eks.yaml` holds just the two settings that are only ever correct on one environment or the other:
+
+- `frontendProxy.ingress.enabled: true` - the ALB ingress class needs the [AWS Load Balancer Controller](https://github.com/AmirWeiser/opentelemetry-aws-infra) installed, which only exists on EKS. Left enabled on minikube, ArgoCD would report the Application stuck `Progressing` forever waiting for an address that never comes. The Ingress rule itself has no `host:` filter, so the ALB's own DNS name works directly in a browser without owning a domain.
+- `global.imagePullSecrets: [{name: ghcr-pull-secret}]` - references a Secret by name only; the credential itself is never committed here (a pull secret's contents are base64, not encryption). It's created directly in the cluster by `opentelemetry-aws-infra`'s bootstrap script from a locally-held PAT. Minikube doesn't need it and doesn't have that secret, so it stays out of the base `values.yaml`.
+
+Every service now runs its own CI-built `ghcr.io/amirweiser/<service>` image - there's no longer a public-fallback exception list to track here.
