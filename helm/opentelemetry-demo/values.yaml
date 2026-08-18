@@ -23,8 +23,8 @@ global:
 accounting:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-accountingservice
+    repository: ghcr.io/amirweiser/accounting
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -36,7 +36,7 @@ ad:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/ad
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 100m
@@ -47,8 +47,8 @@ ad:
 cart:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-cartservice
+    repository: ghcr.io/amirweiser/cart
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 50m
@@ -60,7 +60,7 @@ checkout:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/checkout
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -72,7 +72,7 @@ currency:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/currency
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -84,7 +84,7 @@ email:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/email
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -110,7 +110,7 @@ flagd:
 flagdUi:
   image:
     repository: ghcr.io/amirweiser/flagd-ui
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -121,8 +121,8 @@ flagdUi:
 fraudDetection:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-frauddetectionservice
+    repository: ghcr.io/amirweiser/fraud-detection
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 100m
@@ -134,7 +134,7 @@ frontend:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/frontend
-    tag: 51f805197cb66cf842c6d88d166295a3bcdeeb6d
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 100m
@@ -146,7 +146,7 @@ frontendProxy:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/frontend-proxy
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 50m
@@ -170,7 +170,7 @@ imageProvider:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/image-provider
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -183,7 +183,7 @@ kafka:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/kafka
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 200m
@@ -195,7 +195,7 @@ loadGenerator:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/load-generator
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 50m
@@ -206,8 +206,8 @@ loadGenerator:
 payment:
   replicaCount: 1
   image:
-    repository: ghcr.io/amirweiser/paymentservice
-    tag: 6c796bc0d3d17a539eff5f853b9bbd1859046e36
+    repository: ghcr.io/amirweiser/payment
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 50m
@@ -219,7 +219,7 @@ productCatalog:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/product-catalog
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -231,7 +231,7 @@ quote:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/quote
-    tag: 84a1065dcf494aecb4b3af653055c0493674085e
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
@@ -243,7 +243,7 @@ recommendation:
   replicaCount: 1
   image:
     repository: ghcr.io/amirweiser/recommendation
-    tag: 5783bb4b3292364dc9d1334ef35a26ce2c51c2d1
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 100m
@@ -254,8 +254,8 @@ recommendation:
 shipping:
   replicaCount: 1
   image:
-    repository: ghcr.io/open-telemetry/demo
-    tag: 1.12.0-shippingservice
+    repository: ghcr.io/amirweiser/shipping
+    tag: e4ad98c3c8bc692ea832d94f6365e9bfc45938f8
   resources:
     requests:
       cpu: 25m
