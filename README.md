@@ -60,12 +60,11 @@ All four run single-replica with deliberately small resource footprints — this
 Two ArgoCD Application manifests, one per target - both deploy the same name (`opentelemetry-demo` in the `argocd` namespace), so only ever apply one to a given cluster:
 
 ```bash
-# minikube - loads values.yaml only
+# minikube - loads values.yaml only - applied manually, minikube isn't Terraform-managed
 kubectl apply -f argocd-application.yaml
-
-# EKS - loads values.yaml, then layers values-eks.yaml on top
-kubectl apply -f argocd-application-eks.yaml
 ```
+
+**EKS is different: nothing here gets applied by hand.** `argocd-application-eks.yaml`'s content is templated directly into a Terraform `kubectl_manifest` resource in [opentelemetry-aws-infra](https://github.com/AmirWeiser/opentelemetry-aws-infra)'s `eks/addons.tf` - a single `terraform apply` in that repo installs ArgoCD *and* applies this Application in the same run. The YAML file still lives here as the source of truth for what that Terraform resource mirrors, but isn't itself what gets applied to an EKS cluster.
 
 `destination.server: https://kubernetes.default.svc` targets whatever cluster ArgoCD itself is running on in both cases - the only difference between the two manifests is `spec.source.helm.valueFiles`. Everything else (namespace creation, sync, pruning, self-healing) is handled by the `syncPolicy.automated` block.
 
@@ -74,6 +73,6 @@ kubectl apply -f argocd-application-eks.yaml
 `values.yaml`'s own defaults are minikube-safe (`frontendProxy.ingress.enabled: false`, `global.imagePullSecrets: []`) - flipping them for EKS used to mean hand-editing `values.yaml` and reverting it every time the target environment changed. `values-eks.yaml` holds just the two settings that are only ever correct on one environment or the other:
 
 - `frontendProxy.ingress.enabled: true` - the ALB ingress class needs the [AWS Load Balancer Controller](https://github.com/AmirWeiser/opentelemetry-aws-infra) installed, which only exists on EKS. Left enabled on minikube, ArgoCD would report the Application stuck `Progressing` forever waiting for an address that never comes. The Ingress rule itself has no `host:` filter, so the ALB's own DNS name works directly in a browser without owning a domain.
-- `global.imagePullSecrets: [{name: ghcr-pull-secret}]` - references a Secret by name only; the credential itself is never committed here (a pull secret's contents are base64, not encryption). It's created directly in the cluster by `opentelemetry-aws-infra`'s bootstrap script from a locally-held PAT. Minikube doesn't need it and doesn't have that secret, so it stays out of the base `values.yaml`.
+- `global.imagePullSecrets: [{name: ghcr-pull-secret}]` - references a Secret by name only; the credential itself is never committed here (a pull secret's contents are base64, not encryption). On EKS it's created by Terraform (`kubernetes_secret.ghcr_pull` in `opentelemetry-aws-infra`'s `eks/addons.tf`) from a `TF_VAR_ghcr_pat` environment variable supplied at `apply` time - never written to any file, though it does end up in Terraform's own state (in a private, encrypted S3 bucket). Minikube doesn't need it and doesn't have that secret, so it stays out of the base `values.yaml`.
 
 Every service now runs its own CI-built `ghcr.io/amirweiser/<service>` image - there's no longer a public-fallback exception list to track here.
